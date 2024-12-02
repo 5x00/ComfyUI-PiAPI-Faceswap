@@ -1,5 +1,5 @@
 # ComfyUI-PiAPI-Faceswap
-A simple ComfyUI nodes that integrates PiAPI faceswap service into ComfyUI. This can be helpful if you're trying to create a workflow that includes faceswap for commercial usage.
+A simple ComfyUI nodes that integrates [PiAPI faceswap](https://piapi.ai/faceswap-api) service into ComfyUI. This can be helpful if you're trying to create a workflow that includes faceswap for commercial usage.
 
 ## Roadmap
 [03/12/25] Initial development begins
