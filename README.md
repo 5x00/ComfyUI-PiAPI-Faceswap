@@ -1,2 +1,14 @@
-# ComfyUI-PiAPI-Nodes
-A set of ComfyUI nodes to integrate PiAPI services
+# ComfyUI-PiAPI-Faceswap
+A simple ComfyUI nodes that integrates PiAPI faceswap service into ComfyUI. This can be helpful if you're trying to create a workflow that includes faceswap for commercial usage.
+
+## Roadmap
+[03/12/25] Initial development begins
+
+## Installation
+git clone repository into ComfyUI/custom_nodes
+
+## Usage
+Add in your api_key to run the service. The node takes a base image (the image on which to perform the faceswap) and a target image (the image with the target face) as input. The node automatically crops the face and scales it for optimal performance and cost control. 
+
+## Workflow
+TBD
