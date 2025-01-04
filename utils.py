@@ -23,7 +23,7 @@ def fetch_image(url, payload, headers, timeout=3, interval=0.5):
         # Make the GET request
         response = requests.request("GET", url, headers=headers, json=payload)
         
-        if response.code == 200:
+        if response.status_code == 200:
             data = response.json()
             
             # Check if the response has the expected data (e.g., status is not "pending")
