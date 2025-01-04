@@ -51,22 +51,15 @@ def image_to_bs64(Image: torch.Tensor) -> str:
 def url_to_tensor(image_url: str) -> tuple[torch.Tensor]:
     # Fetch the image data from the URL
     response = requests.get(image_url)
-    response.raise_for_status()  # Raise an error if the request fails
+    response.raise_for_status() 
     image_data = response.content
 
-    # Open the image with PIL and handle EXIF orientation
     image = PIL.Image.open(BytesIO(image_data))
     image = PIL.ImageOps.exif_transpose(image)
 
-    # Convert to RGBA for potential alpha channel handling
-    image = image.convert("RGBA")
-    image_np = np.array(image).astype(np.float32) / 255.0  # Normalize
-
-    # Split the image into RGB and Alpha channels
-    rgb_np, alpha_np = image_np[..., :3], image_np[..., 3]
-
-    # Convert RGB to PyTorch tensor and ensure it's in the [N, H, W, C] format
-    tensor_image = torch.from_numpy(rgb_np).unsqueeze(0)  # Adds N dimension
+    image = image.convert("RGB")
+    image_np = np.array(image).astype(np.float32) / 255.0
+    tensor_image = torch.from_numpy(image_np).unsqueeze(0)
 
     return tensor_image
 
@@ -91,8 +84,11 @@ def faceswapper(Image, Face, API_Key):
     response_data = response.json()
     task_url = url + f'/{response_data.get("data", {}).get("task_id", None)}'
 
-    img_response = requests.request("GET", task_url, headers=headers, data='')
-    out_url = img_response.get("data", {}).get("image_url", None)
+    img_response = fetch_image(task_url, headers=headers, payload='')
+    if img_response is not None:
+        out_url = img_response.get("data", {}).get("image_url", None)
+    else:
+        out_url = 'https://developers.google.com/static/maps/documentation/streetview/images/error-image-generic.png'
     img_out = url_to_tensor(out_url)
-    
+
     return img_out
