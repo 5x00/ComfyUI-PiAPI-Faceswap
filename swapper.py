@@ -1,11 +1,10 @@
-import numpy as np
 from .utils import faceswapper
 
-class tagger_node:
+class swapper_node:
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("Output",)
     FUNCTION = "swap_face"
-    CATEGORY = "5x00/"
+    CATEGORY = "5x00"
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):
@@ -21,10 +20,10 @@ class tagger_node:
             },
         }
 
-    def swap_face(Image, Face, API_Key):
+    def swap_face(self, Image, Face, API_Key):
         swapped_image = faceswapper(Image, Face, API_Key)
         return (swapped_image,)
     
 NODE_CLASS_MAPPINGS = {
-    "Face Swapper" : tagger_node,
+    "Face Swapper" : swapper_node,
 }
