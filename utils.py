@@ -16,25 +16,31 @@ def tensor_to_image(tensor):
         tensor = tensor[0]
     return PIL.Image.fromarray(tensor)
 
-def fetch_image(url, payload, headers, timeout=3, interval=0.5):
+def fetch_image(url, headers, timeout=16, interval=2):
     start_time = time.time()
-    
+    image_url = ''
+
     while time.time() - start_time < timeout:
         # Make the GET request
-        response = requests.request("GET", url, headers=headers, json=payload)
+        response = requests.get(url, headers=headers)
         
         if response.status_code == 200:
             data = response.json()
             
-            # Check if the response has the expected data (e.g., status is not "pending")
-            if data.get("data", {}).get("status") != "pending":
-                return data  # Response is ready
+            # Check if the response "status" is neither "pending" nor "processing"
+            status = data.get("data", {}).get("status")
+            print(f"Current task status is {status}")
+            if status not in ["pending", "processing"]:
+                image_url = data.get("data", {}).get("output", {}).get("image_url")
+                print(image_url)
+                return image_url  # Response is ready with a valid status
         
         # Wait before the next poll
         time.sleep(interval)
     
     # If the timeout is reached, return None or perform another action
-    return None
+    image_url = 'https://live.staticflickr.com/4049/4271720183_9a57e403a0_c.jpg'
+    return image_url
 
 def image_to_bs64(Image: torch.Tensor) -> str:
     # Convert and resize image
@@ -84,11 +90,7 @@ def faceswapper(Image, Face, API_Key):
     response_data = response.json()
     task_url = url + f'/{response_data.get("data", {}).get("task_id", None)}'
 
-    img_response = fetch_image(task_url, headers=headers, payload='')
-    if img_response is not None:
-        out_url = img_response.get("data", {}).get("image_url", None)
-    else:
-        out_url = 'https://live.staticflickr.com/4049/4271720183_9a57e403a0_c.jpg'
-    img_out = url_to_tensor(out_url)
+    img_response = fetch_image(task_url, headers=headers)
+    img_out = url_to_tensor(img_response)
 
     return img_out
