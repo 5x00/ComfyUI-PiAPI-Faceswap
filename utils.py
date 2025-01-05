@@ -88,7 +88,7 @@ def faceswapper(Image, Face, API_Key):
     if img_response is not None:
         out_url = img_response.get("data", {}).get("image_url", None)
     else:
-        out_url = 'https://developers.google.com/static/maps/documentation/streetview/images/error-image-generic.png'
+        out_url = 'https://live.staticflickr.com/4049/4271720183_9a57e403a0_c.jpg'
     img_out = url_to_tensor(out_url)
 
     return img_out
